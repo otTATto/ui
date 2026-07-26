@@ -1,0 +1,237 @@
+---
+import ExperimentDemos from '../components/ExperimentDemos.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = '冪等なトグル';
+const description =
+	'冪等性のある操作を提供するトグルスイッチやトグルボタンを、Web UI として試す実験的なページです。';
+---
+
+<BaseLayout
+	title={title}
+	description={description}
+	canonicalUrl="https://ui.tato.bio/idempotent-toggle"
+	socialImageUrl="https://ui.tato.bio/idempotent-toggle-og.png"
+>
+	<main class="mx-auto w-full max-w-[52rem] px-5 py-12 sm:px-8 sm:py-20">
+		<header class="mb-16 border-b-2 border-[#20201d] pb-10 sm:mb-24">
+			<p class="mb-4 font-mono text-[0.65rem] font-semibold tracking-[0.2em] uppercase">
+				UI EXPERIMENT / 001
+			</p>
+			<h1 class="text-[clamp(2.6rem,10vw,5.7rem)] leading-[0.95] font-extrabold tracking-[-0.07em]">
+				冪等な<br class="sm:hidden" />トグル
+			</h1>
+			<p class="mt-7 max-w-2xl border-l-4 border-[#f85f39] pl-4 text-[0.78rem] leading-7 text-[#5d5a52]">
+				注意: このページは2026年7月27日に急遽、構築されました。そのため、今後ページが削除されたり、内容や構造が大きく変更される場合があります。あらかじめ、ご了承ください。
+			</p>
+		</header>
+
+		<article class="article">
+			<section>
+				<h2><span>00</span> 概要</h2>
+				<p>
+					ソフトウェアの UI において、トグルスイッチやトグルボタンは、冪等性のある操作を提供して<strong>いない</strong>ことがほとんどです。ここは、冪等性のある操作を提供するトグルスイッチやトグルボタンを
+					Web の UI として表現してみるための、実験的な場所です。
+				</p>
+			</section>
+
+			<section>
+				<h2><span>01</span> 一般的なトグルスイッチ</h2>
+				<p>
+					一般的なトグルスイッチは、「状態の表現」と「状態の操作」について、以下の特徴を持っています。
+				</p>
+				<ul>
+					<li>要素自身が現在の状態を表現している</li>
+					<li>要素全体が 1 つのターゲット領域から構成される</li>
+					<li>単一の操作のみを受け付ける</li>
+					<li>操作するごとに状態が反転する</li>
+				</ul>
+
+				<ExperimentDemos demo="standard-switches" />
+
+				<p>また、一般的なトグルボタンについても、まったく同じ特徴を持つと言えます。</p>
+
+				<ExperimentDemos demo="standard-buttons" />
+
+				<p>
+					以降では、一般的なトグルスイッチを「非冪等なトグルスイッチ」、一般的なトグルボタンを「非冪等なトグルボタン」と言います。
+				</p>
+			</section>
+
+			<section>
+				<h2><span>02</span> 冪等なトグルスイッチ</h2>
+				<p>
+					一般的な、非冪等なトグルスイッチの特徴を挙げたうえで「冪等なトグルスイッチ」の特徴を想像してみると、いくつかのパターンが考えられます。
+				</p>
+
+				<h3>① 2 つのターゲット領域から成るトグルスイッチ</h3>
+				<p>このトグルスイッチは、「状態の表現」と「状態の操作」について、以下の特徴を持っています。</p>
+				<ul>
+					<li>要素自身が現在の状態を表現している</li>
+					<li><strong>要素全体が分割された 2 つのターゲット領域から構成される</strong></li>
+					<li><strong>要素の左側を操作すると必ず状態が OFF になる</strong></li>
+					<li><strong>要素の右側を操作すると必ず状態が ON になる</strong></li>
+				</ul>
+
+				<ExperimentDemos demo="split-switch" />
+
+				<p>
+					このトグルスイッチは、確かに冪等性のある操作ができますが、以下の 2
+					つの大きな欠点があります。ターゲット領域が狭く誤操作を招きやすいうえに、要素の実際の見た目と操作できる部分とに乖離があり、優れた UI
+					とは言い難いでしょう。フィッツの法則が指摘する、少なくとも以下の 2 つの内容に違反しています。
+				</p>
+				<ol>
+					<li>タッチターゲットは十分に大きくなければならない</li>
+					<li>タッチターゲット同士は十分な間隔を空けなければならない</li>
+				</ol>
+
+				<p>
+					したがって、以下のように「ロッカースイッチ」を模したトグルスイッチを用意したとしても、上記のフィッツの法則を満たすことは難しいため、2
+					つのタッチターゲット領域を持つトグルスイッチを用意するのは、現実的ではなさそうです。
+				</p>
+
+				<ExperimentDemos demo="rocker-switch" />
+
+				<h3>② 倒したい方向に倒すことで状態を切り替えるトグルスイッチ</h3>
+				<p>このトグルスイッチは、「状態の表現」と「状態の操作」について、以下の特徴を持っています。</p>
+				<ul>
+					<li>要素自身が現在の状態を表現している</li>
+					<li>要素全体が 1 つのターゲット領域から構成される</li>
+					<li><strong>複数の操作を受け付ける</strong></li>
+					<li><strong>単押しでは何も起こらない（状態を反転させない）</strong></li>
+					<li><strong>タップまたはクリックしたまま、左側にドラッグすることで状態を OFF にする</strong></li>
+					<li><strong>タップまたはクリックしたまま、右側にドラッグすることで状態を ON にする</strong></li>
+				</ul>
+
+				<ExperimentDemos demo="directional-switch" />
+
+				<p>
+					このトグルスイッチも冪等性のある操作ができますが、単押しでは反応しないため、最初は故障したようにも感じられます。また、小さな要素の上で方向を意識してドラッグする操作には慎重さが必要で、一般的なトグルスイッチほど軽快ではありません。一方で、一度操作方法を理解すれば、現在の状態を確かめずに意図する状態へ倒せる感覚は明快です。
+				</p>
+
+				<p>
+					そして何より、これらの冪等なトグルスイッチは、非冪等なトグルスイッチに慣れているすべての人に混乱を招くことを忘れてはならないですね。ヤコブの法則が示すように、私たちはすでに非冪等なトグルスイッチを見慣れており、それがどういう操作でどう振る舞うのかのメンタルモデルが構築されています。
+				</p>
+			</section>
+
+			<section>
+				<h2><span>03</span> 冪等なトグルボタン</h2>
+				<p>
+					冪等なトグルボタンは、思うに、2 つで 1
+					セットのボタングループから構成されます。具体的には、以下の特徴を持っています。
+				</p>
+				<ul>
+					<li>要素自身が現在の状態を表現している</li>
+					<li><strong>1 つのトグルボタングループ要素は 2 つのボタンから構成される</strong></li>
+					<li><strong>それぞれのボタンはラジオボタンのような冪等な振る舞いをする</strong></li>
+					<li><strong>左側のボタンを操作すると必ず状態を OFF にする</strong></li>
+					<li><strong>右側のボタンを操作すると必ず状態を ON にする</strong></li>
+				</ul>
+
+				<ExperimentDemos demo="button-group" />
+
+				<p>
+					このトグルボタンは冪等性のある操作ができますが、これであれば、ラジオボタングループを使うのが良いかもしれません。
+				</p>
+			</section>
+		</article>
+
+		<footer class="mt-24 flex items-center justify-between border-t border-[#20201d]/25 pt-5 font-mono text-[0.6rem] tracking-[0.16em] text-[#77736a] uppercase">
+			<span>UI EXPERIMENT</span>
+			<span>2026—07—27</span>
+		</footer>
+	</main>
+</BaseLayout>
+
+<style>
+	.article {
+		font-size: clamp(0.96rem, 1.8vw, 1.06rem);
+		letter-spacing: 0.015em;
+	}
+
+	.article section + section {
+		margin-top: 7rem;
+	}
+
+	.article h2 {
+		display: flex;
+		align-items: baseline;
+		gap: 0.75rem;
+		margin: 0 0 2rem;
+		font-size: clamp(1.65rem, 5vw, 2.5rem);
+		font-weight: 800;
+		letter-spacing: -0.055em;
+		line-height: 1.25;
+	}
+
+	.article h2 span {
+		color: #f85f39;
+		font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+		font-size: 0.65rem;
+		letter-spacing: 0;
+	}
+
+	.article h3 {
+		margin: 4.5rem 0 1.5rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid rgb(32 32 29 / 25%);
+		font-size: clamp(1.25rem, 3vw, 1.55rem);
+		font-weight: 800;
+		letter-spacing: -0.035em;
+		line-height: 1.55;
+	}
+
+	.article p {
+		margin: 0;
+		color: #363530;
+	}
+
+	.article p + p {
+		margin-top: 1.5rem;
+	}
+
+	.article strong {
+		font-weight: 800;
+		text-decoration: underline;
+		text-decoration-color: #f85f39;
+		text-decoration-thickness: 0.18em;
+		text-underline-offset: 0.15em;
+	}
+
+	.article ul,
+	.article ol {
+		margin: 1.6rem 0 0;
+		padding: 1.25rem 1.25rem 1.25rem 3rem;
+		border: 1px solid rgb(32 32 29 / 14%);
+		border-radius: 0.75rem;
+		background: rgb(255 254 249 / 65%);
+	}
+
+	.article li {
+		padding-left: 0.35rem;
+	}
+
+	.article li + li {
+		margin-top: 0.55rem;
+	}
+
+	.article li::marker {
+		color: #f85f39;
+		font-weight: 800;
+	}
+
+	@media (max-width: 540px) {
+		.article section + section {
+			margin-top: 5.5rem;
+		}
+
+		.article h3 {
+			margin-top: 3.75rem;
+		}
+
+		.article ul,
+		.article ol {
+			padding-left: 2.25rem;
+		}
+	}
+</style>

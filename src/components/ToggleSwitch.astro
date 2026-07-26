@@ -1,0 +1,25 @@
+---
+interface Props {
+	defaultOn?: boolean;
+	disabled?: boolean;
+	label?: string;
+}
+
+const {
+	defaultOn = false,
+	disabled = false,
+	label = '機能を切り替える',
+} = Astro.props;
+---
+
+<button
+	type="button"
+	class="toggle-switch"
+	role="switch"
+	aria-checked={defaultOn ? 'true' : 'false'}
+	aria-label={label}
+	disabled={disabled}
+	data-widget="toggle-switch"
+>
+	<span class="toggle-switch__knob" aria-hidden="true"></span>
+</button>
