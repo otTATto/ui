@@ -1,0 +1,99 @@
+---
+interface Props {
+	defaultOn?: boolean;
+	disabled?: boolean;
+	label?: string;
+}
+
+const {
+	defaultOn = false,
+	disabled = false,
+	label = '自動保存',
+} = Astro.props;
+---
+
+<button
+	type="button"
+	class="standard-toggle-button"
+	aria-pressed={defaultOn ? 'true' : 'false'}
+	disabled={disabled}
+	data-standard-toggle-button
+>
+	<span class="standard-toggle-button__mark" aria-hidden="true">✓</span>
+	{label}
+</button>
+
+<script>
+	document
+		.querySelectorAll<HTMLButtonElement>('[data-standard-toggle-button]')
+		.forEach((button) => {
+			button.addEventListener('click', () => {
+				const isPressed = button.getAttribute('aria-pressed') === 'true';
+				button.setAttribute('aria-pressed', String(!isPressed));
+			});
+		});
+</script>
+
+<style>
+	.standard-toggle-button {
+		display: inline-flex;
+		min-height: 2.75rem;
+		align-items: center;
+		gap: 0.45rem;
+		padding: 0.55rem 0.85rem;
+		cursor: pointer;
+		border: 2px solid #20201d;
+		border-radius: 0.7rem;
+		color: #20201d;
+		background: #fffef9;
+		box-shadow: 0 3px 0 #20201d;
+		font-size: 0.82rem;
+		font-weight: 700;
+		transition:
+			color 150ms ease,
+			background-color 150ms ease,
+			transform 100ms ease,
+			box-shadow 100ms ease;
+	}
+
+	.standard-toggle-button:active:not(:disabled) {
+		transform: translateY(2px);
+		box-shadow: 0 1px 0 #20201d;
+	}
+
+	.standard-toggle-button:focus-visible {
+		outline: 3px solid #ff6a43;
+		outline-offset: 4px;
+	}
+
+	.standard-toggle-button[aria-pressed='true'] {
+		color: #fff;
+		background: #20201d;
+	}
+
+	.standard-toggle-button:disabled {
+		cursor: not-allowed;
+		opacity: 0.38;
+	}
+
+	.standard-toggle-button__mark {
+		display: grid;
+		width: 1.1rem;
+		height: 1.1rem;
+		place-items: center;
+		border: 1px solid currentColor;
+		border-radius: 0.25rem;
+		font-size: 0.68rem;
+		opacity: 0;
+	}
+
+	.standard-toggle-button[aria-pressed='true'] .standard-toggle-button__mark {
+		opacity: 1;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.standard-toggle-button {
+			transition: none;
+		}
+	}
+</style>

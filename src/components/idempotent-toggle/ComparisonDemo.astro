@@ -1,0 +1,74 @@
+---
+interface Props {
+	label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<div class="comparison-demo" aria-label={label}>
+	<div class="comparison-demo__cell">
+		<span class="comparison-demo__label">非冪等</span>
+		<slot name="non-idempotent" />
+	</div>
+	<div class="comparison-demo__cell">
+		<span class="comparison-demo__label">冪等</span>
+		<slot name="idempotent" />
+	</div>
+</div>
+
+<style>
+	.comparison-demo {
+		display: grid;
+		min-height: 17rem;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		margin-block: 2rem 2.75rem;
+		border: 1px solid rgb(32 32 29 / 14%);
+		border-radius: 1.5rem;
+		background:
+			linear-gradient(rgb(32 32 29 / 4%) 1px, transparent 1px),
+			linear-gradient(90deg, rgb(32 32 29 / 4%) 1px, transparent 1px),
+			#faf8f2;
+		background-size: 20px 20px;
+		box-shadow: 0 14px 40px rgb(58 52 38 / 7%);
+		overflow: hidden;
+	}
+
+	.comparison-demo__cell {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 3.75rem 1.25rem 2rem;
+	}
+
+	.comparison-demo__cell + .comparison-demo__cell {
+		border-left: 1px dashed rgb(32 32 29 / 25%);
+	}
+
+	.comparison-demo__label {
+		position: absolute;
+		top: 1rem;
+		padding: 0.25rem 0.65rem;
+		border: 1px solid currentColor;
+		border-radius: 999px;
+		background: #faf8f2;
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+	}
+
+	.comparison-demo__cell:nth-child(2) .comparison-demo__label {
+		color: #c33b1d;
+	}
+
+	@media (max-width: 540px) {
+		.comparison-demo {
+			min-height: 15rem;
+		}
+
+		.comparison-demo__cell {
+			padding-inline: 0.6rem;
+		}
+	}
+</style>

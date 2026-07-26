@@ -1,0 +1,79 @@
+<div
+	class="idempotent-toggle-button-group"
+	role="group"
+	aria-label="自動保存"
+	data-idempotent-toggle-button-group
+	data-state="off"
+>
+	<button type="button" data-value="off" aria-pressed="true">OFF</button>
+	<button type="button" data-value="on" aria-pressed="false">ON</button>
+	<span class="sr-only" aria-live="polite" data-state-label>オフ</span>
+</div>
+
+<script>
+	document
+		.querySelectorAll<HTMLElement>('[data-idempotent-toggle-button-group]')
+		.forEach((group) => {
+			group.querySelectorAll<HTMLButtonElement>('button[data-value]').forEach((button) => {
+				button.addEventListener('click', () => {
+					const value = button.dataset.value;
+					if (value !== 'off' && value !== 'on') {
+						return;
+					}
+
+					group.dataset.state = value;
+					group.querySelectorAll<HTMLButtonElement>('button[data-value]').forEach((item) => {
+						item.setAttribute('aria-pressed', String(item.dataset.value === value));
+					});
+
+					const stateLabel = group.querySelector<HTMLElement>('[data-state-label]');
+					if (stateLabel) {
+						stateLabel.textContent = value === 'on' ? 'オン' : 'オフ';
+					}
+				});
+			});
+		});
+</script>
+
+<style>
+	.idempotent-toggle-button-group {
+		display: inline-grid;
+		grid-template-columns: repeat(2, 1fr);
+		padding: 0.25rem;
+		border: 2px solid #20201d;
+		border-radius: 0.75rem;
+		background: #e4e0d5;
+		box-shadow: 0 3px 0 #20201d;
+	}
+
+	.idempotent-toggle-button-group button {
+		min-width: 3.25rem;
+		min-height: 2.35rem;
+		cursor: pointer;
+		border: 0;
+		border-radius: 0.45rem;
+		color: #67635a;
+		background: transparent;
+		font-size: 0.7rem;
+		font-weight: 800;
+		transition:
+			color 150ms ease,
+			background-color 150ms ease;
+	}
+
+	.idempotent-toggle-button-group button:focus-visible {
+		outline: 3px solid #ff6a43;
+		outline-offset: 4px;
+	}
+
+	.idempotent-toggle-button-group button[aria-pressed='true'] {
+		color: #fff;
+		background: #20201d;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.idempotent-toggle-button-group button {
+			transition: none;
+		}
+	}
+</style>

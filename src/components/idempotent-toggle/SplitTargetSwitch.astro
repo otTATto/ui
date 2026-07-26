@@ -1,0 +1,90 @@
+<div
+	class="split-target-switch"
+	role="group"
+	aria-label="2 つのターゲット領域から成るトグルスイッチ"
+	data-split-target-switch
+	data-state="off"
+>
+	<button type="button" data-value="off" aria-label="オフにする"></button>
+	<button type="button" data-value="on" aria-label="オンにする"></button>
+	<span class="split-target-switch__knob" aria-hidden="true"></span>
+	<span class="sr-only" aria-live="polite" data-state-label>オフ</span>
+</div>
+
+<script>
+	document.querySelectorAll<HTMLElement>('[data-split-target-switch]').forEach((group) => {
+		group.querySelectorAll<HTMLButtonElement>('button[data-value]').forEach((button) => {
+			button.addEventListener('click', () => {
+				const value = button.dataset.value;
+				if (value !== 'off' && value !== 'on') {
+					return;
+				}
+
+				group.dataset.state = value;
+				const stateLabel = group.querySelector<HTMLElement>('[data-state-label]');
+				if (stateLabel) {
+					stateLabel.textContent = value === 'on' ? 'オン' : 'オフ';
+				}
+			});
+		});
+	});
+</script>
+
+<style>
+	.split-target-switch {
+		position: relative;
+		display: grid;
+		width: 4.5rem;
+		height: 2.6rem;
+		grid-template-columns: repeat(2, 1fr);
+		border: 2px solid #20201d;
+		border-radius: 999px;
+		background: #e4e0d5;
+		box-shadow: 0 3px 0 #20201d;
+		overflow: hidden;
+	}
+
+	.split-target-switch[data-state='on'] {
+		background: #f85f39;
+	}
+
+	.split-target-switch button {
+		z-index: 1;
+		cursor: pointer;
+		border: 0;
+		background: transparent;
+	}
+
+	.split-target-switch button + button {
+		border-left: 1px dashed rgb(32 32 29 / 35%);
+	}
+
+	.split-target-switch button:focus-visible {
+		outline: 3px solid #ff6a43;
+		outline-offset: -3px;
+	}
+
+	.split-target-switch__knob {
+		position: absolute;
+		z-index: 2;
+		top: 0.3rem;
+		left: 0.3rem;
+		width: 1.75rem;
+		height: 1.75rem;
+		pointer-events: none;
+		border: 2px solid #20201d;
+		border-radius: 50%;
+		background: #fffef9;
+		transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.split-target-switch[data-state='on'] .split-target-switch__knob {
+		transform: translateX(1.85rem);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.split-target-switch__knob {
+			transition: none;
+		}
+	}
+</style>

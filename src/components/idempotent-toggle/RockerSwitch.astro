@@ -1,0 +1,87 @@
+<div
+	class="rocker-switch"
+	role="group"
+	aria-label="ロッカースイッチ型の冪等なトグルスイッチ"
+	data-rocker-switch
+	data-state="off"
+>
+	<button type="button" data-value="off" aria-pressed="true">OFF</button>
+	<button type="button" data-value="on" aria-pressed="false">ON</button>
+	<span class="sr-only" aria-live="polite" data-state-label>オフ</span>
+</div>
+
+<script>
+	document.querySelectorAll<HTMLElement>('[data-rocker-switch]').forEach((group) => {
+		group.querySelectorAll<HTMLButtonElement>('button[data-value]').forEach((button) => {
+			button.addEventListener('click', () => {
+				const value = button.dataset.value;
+				if (value !== 'off' && value !== 'on') {
+					return;
+				}
+
+				group.dataset.state = value;
+				group.querySelectorAll<HTMLButtonElement>('button[data-value]').forEach((item) => {
+					item.setAttribute('aria-pressed', String(item.dataset.value === value));
+				});
+
+				const stateLabel = group.querySelector<HTMLElement>('[data-state-label]');
+				if (stateLabel) {
+					stateLabel.textContent = value === 'on' ? 'オン' : 'オフ';
+				}
+			});
+		});
+	});
+</script>
+
+<style>
+	.rocker-switch {
+		display: grid;
+		width: 6.2rem;
+		height: 3.5rem;
+		grid-template-columns: repeat(2, 1fr);
+		padding: 0.3rem;
+		border: 2px solid #20201d;
+		border-radius: 0.75rem;
+		background: #20201d;
+		box-shadow: 0 4px 0 #807b70;
+		perspective: 120px;
+	}
+
+	.rocker-switch button {
+		cursor: pointer;
+		border: 0;
+		color: #f8f5ec;
+		background: #484741;
+		font-size: 0.66rem;
+		font-weight: 800;
+		transition:
+			background-color 150ms ease,
+			transform 150ms ease;
+	}
+
+	.rocker-switch button:first-child {
+		border-radius: 0.35rem 0 0 0.35rem;
+	}
+
+	.rocker-switch button:last-of-type {
+		border-radius: 0 0.35rem 0.35rem 0;
+	}
+
+	.rocker-switch button:focus-visible {
+		z-index: 1;
+		outline: 3px solid #ff6a43;
+		outline-offset: 4px;
+	}
+
+	.rocker-switch button[aria-pressed='true'] {
+		color: #20201d;
+		background: #ffca38;
+		transform: rotateY(9deg) scale(0.96);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.rocker-switch button {
+			transition: none;
+		}
+	}
+</style>

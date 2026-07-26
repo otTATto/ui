@@ -1,0 +1,61 @@
+---
+interface Props {
+	label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<div class="trio-demo" aria-label={label}>
+	<div class="trio-demo__item">
+		<slot name="off" />
+	</div>
+	<div class="trio-demo__item">
+		<slot name="on" />
+	</div>
+	<div class="trio-demo__item">
+		<slot name="disabled" />
+		<span class="trio-demo__status">disabled</span>
+	</div>
+</div>
+
+<style>
+	.trio-demo {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.5rem;
+		margin-block: 2rem 2.75rem;
+		padding: clamp(1.75rem, 5vw, 3rem);
+		border: 1px solid rgb(32 32 29 / 14%);
+		border-radius: 1.5rem;
+		background:
+			linear-gradient(rgb(32 32 29 / 4%) 1px, transparent 1px),
+			linear-gradient(90deg, rgb(32 32 29 / 4%) 1px, transparent 1px),
+			#faf8f2;
+		background-size: 20px 20px;
+		box-shadow: 0 14px 40px rgb(58 52 38 / 7%);
+	}
+
+	.trio-demo__item {
+		display: flex;
+		min-height: 5rem;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.trio-demo__status {
+		margin-top: 0.6rem;
+		color: #77736a;
+		font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+		font-size: 0.68rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	@media (max-width: 540px) {
+		.trio-demo {
+			padding-inline: 0.75rem;
+		}
+	}
+</style>

@@ -1,0 +1,98 @@
+---
+interface Props {
+	defaultOn?: boolean;
+	disabled?: boolean;
+	label?: string;
+}
+
+const {
+	defaultOn = false,
+	disabled = false,
+	label = '機能を切り替える',
+} = Astro.props;
+---
+
+<button
+	type="button"
+	class="standard-switch"
+	role="switch"
+	aria-checked={defaultOn ? 'true' : 'false'}
+	aria-label={label}
+	disabled={disabled}
+	data-standard-switch
+>
+	<span class="standard-switch__knob" aria-hidden="true"></span>
+</button>
+
+<script>
+	document.querySelectorAll<HTMLButtonElement>('[data-standard-switch]').forEach((button) => {
+		button.addEventListener('click', () => {
+			const isOn = button.getAttribute('aria-checked') === 'true';
+			button.setAttribute('aria-checked', String(!isOn));
+		});
+	});
+</script>
+
+<style>
+	.standard-switch {
+		position: relative;
+		width: 4.5rem;
+		height: 2.6rem;
+		flex: 0 0 auto;
+		cursor: pointer;
+		border: 2px solid #20201d;
+		border-radius: 999px;
+		background: #e4e0d5;
+		box-shadow: 0 3px 0 #20201d;
+		transition:
+			background-color 150ms ease,
+			transform 100ms ease,
+			box-shadow 100ms ease;
+	}
+
+	.standard-switch:hover:not(:disabled) {
+		background: #d9d4c8;
+	}
+
+	.standard-switch:active:not(:disabled) {
+		transform: translateY(2px);
+		box-shadow: 0 1px 0 #20201d;
+	}
+
+	.standard-switch:focus-visible {
+		outline: 3px solid #ff6a43;
+		outline-offset: 4px;
+	}
+
+	.standard-switch[aria-checked='true'] {
+		background: #f85f39;
+	}
+
+	.standard-switch:disabled {
+		cursor: not-allowed;
+		opacity: 0.38;
+	}
+
+	.standard-switch__knob {
+		position: absolute;
+		top: 0.3rem;
+		left: 0.3rem;
+		width: 1.75rem;
+		height: 1.75rem;
+		border: 2px solid #20201d;
+		border-radius: 50%;
+		background: #fffef9;
+		transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.standard-switch[aria-checked='true'] .standard-switch__knob {
+		transform: translateX(1.85rem);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.standard-switch,
+		.standard-switch__knob {
+			transition: none;
+		}
+	}
+</style>

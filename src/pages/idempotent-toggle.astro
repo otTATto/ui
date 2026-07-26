@@ -1,5 +1,12 @@
 ---
-import ExperimentDemos from '../components/ExperimentDemos.astro';
+import ComparisonDemo from '../components/idempotent-toggle/ComparisonDemo.astro';
+import DirectionalSwitch from '../components/idempotent-toggle/DirectionalSwitch.astro';
+import IdempotentToggleButtonGroup from '../components/idempotent-toggle/IdempotentToggleButtonGroup.astro';
+import RockerSwitch from '../components/idempotent-toggle/RockerSwitch.astro';
+import SplitTargetSwitch from '../components/idempotent-toggle/SplitTargetSwitch.astro';
+import StandardSwitch from '../components/idempotent-toggle/StandardSwitch.astro';
+import StandardToggleButton from '../components/idempotent-toggle/StandardToggleButton.astro';
+import TrioDemo from '../components/idempotent-toggle/TrioDemo.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const title = '冪等なトグル';
@@ -47,11 +54,19 @@ const description =
 					<li>操作するごとに状態が反転する</li>
 				</ul>
 
-				<ExperimentDemos demo="standard-switches" />
+				<TrioDemo label="一般的なトグルスイッチの例">
+					<StandardSwitch slot="off" label="初期値がオフのトグルスイッチ" />
+					<StandardSwitch slot="on" defaultOn label="初期値がオンのトグルスイッチ" />
+					<StandardSwitch slot="disabled" disabled label="無効なトグルスイッチ" />
+				</TrioDemo>
 
 				<p>また、一般的なトグルボタンについても、まったく同じ特徴を持つと言えます。</p>
 
-				<ExperimentDemos demo="standard-buttons" />
+				<TrioDemo label="一般的なトグルボタンの例">
+					<StandardToggleButton slot="off" label="自動保存" />
+					<StandardToggleButton slot="on" defaultOn label="自動保存" />
+					<StandardToggleButton slot="disabled" disabled label="自動保存" />
+				</TrioDemo>
 
 				<p>
 					以降では、一般的なトグルスイッチを「非冪等なトグルスイッチ」、一般的なトグルボタンを「非冪等なトグルボタン」と言います。
@@ -73,7 +88,10 @@ const description =
 					<li><strong>要素の右側を操作すると必ず状態が ON になる</strong></li>
 				</ul>
 
-				<ExperimentDemos demo="split-switch" />
+				<ComparisonDemo label="非冪等なトグルスイッチと冪等なトグルスイッチの比較">
+					<StandardSwitch slot="non-idempotent" label="非冪等なトグルスイッチ" />
+					<SplitTargetSwitch slot="idempotent" />
+				</ComparisonDemo>
 
 				<p>
 					このトグルスイッチは、確かに冪等性のある操作ができますが、以下の 2
@@ -90,7 +108,10 @@ const description =
 					つのタッチターゲット領域を持つトグルスイッチを用意するのは、現実的ではなさそうです。
 				</p>
 
-				<ExperimentDemos demo="rocker-switch" />
+				<ComparisonDemo label="非冪等なトグルスイッチとロッカースイッチ型の比較">
+					<StandardSwitch slot="non-idempotent" label="非冪等なトグルスイッチ" />
+					<RockerSwitch slot="idempotent" />
+				</ComparisonDemo>
 
 				<h3>② 倒したい方向に倒すことで状態を切り替えるトグルスイッチ</h3>
 				<p>このトグルスイッチは、「状態の表現」と「状態の操作」について、以下の特徴を持っています。</p>
@@ -103,7 +124,10 @@ const description =
 					<li><strong>タップまたはクリックしたまま、右側にドラッグすることで状態を ON にする</strong></li>
 				</ul>
 
-				<ExperimentDemos demo="directional-switch" />
+				<ComparisonDemo label="非冪等なトグルスイッチとドラッグ操作型の比較">
+					<StandardSwitch slot="non-idempotent" label="非冪等なトグルスイッチ" />
+					<DirectionalSwitch slot="idempotent" />
+				</ComparisonDemo>
 
 				<p>
 					このトグルスイッチも冪等性のある操作ができますが、単押しでは反応しないため、最初は故障したようにも感じられます。また、小さな要素の上で方向を意識してドラッグする操作には慎重さが必要で、一般的なトグルスイッチほど軽快ではありません。一方で、一度操作方法を理解すれば、現在の状態を確かめずに意図する状態へ倒せる感覚は明快です。
@@ -128,7 +152,10 @@ const description =
 					<li><strong>右側のボタンを操作すると必ず状態を ON にする</strong></li>
 				</ul>
 
-				<ExperimentDemos demo="button-group" />
+				<ComparisonDemo label="非冪等なトグルボタンと冪等なトグルボタンの比較">
+					<StandardToggleButton slot="non-idempotent" label="自動保存" />
+					<IdempotentToggleButtonGroup slot="idempotent" />
+				</ComparisonDemo>
 
 				<p>
 					このトグルボタンは冪等性のある操作ができますが、これであれば、ラジオボタングループを使うのが良いかもしれません。
