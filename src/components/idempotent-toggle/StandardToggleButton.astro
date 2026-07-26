@@ -1,4 +1,6 @@
 ---
+import { Check } from 'lucide-astro';
+
 interface Props {
 	defaultOn?: boolean;
 	disabled?: boolean;
@@ -19,7 +21,9 @@ const {
 	disabled={disabled}
 	data-standard-toggle-button
 >
-	<span class="standard-toggle-button__mark" aria-hidden="true">✓</span>
+	<span class="standard-toggle-button__mark" aria-hidden="true">
+		<Check size={12} strokeWidth={3} />
+	</span>
 	{label}
 </button>
 

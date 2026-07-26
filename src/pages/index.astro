@@ -1,17 +1,54 @@
 ---
+import { ArrowUpRight } from 'lucide-astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
+const title = 'TATo UI Playground';
+const description = 'Web UI の表現や操作を試すための実験的な場所です。';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title={title} description={description}>
+	<main class="mx-auto flex min-h-screen w-full max-w-[52rem] flex-col px-5 py-12 sm:px-8 sm:py-20">
+		<header class="border-b-2 border-[#20201d] pb-10">
+			<p class="mb-4 font-mono text-[0.65rem] font-semibold tracking-[0.2em] uppercase">
+				UI EXPERIMENT INDEX
+			</p>
+			<h1 class="text-[clamp(2.6rem,10vw,5.7rem)] leading-[0.95] font-extrabold tracking-[-0.07em]">
+				TATo UI<br />Playground
+			</h1>
+			<p class="mt-7 max-w-xl text-sm leading-7 text-[#5d5a52]">{description}</p>
+		</header>
+
+		<section class="mt-16" aria-labelledby="experiments-heading">
+			<h2
+				id="experiments-heading"
+				class="mb-5 font-mono text-[0.65rem] font-semibold tracking-[0.2em] uppercase"
+			>
+				Experiments
+			</h2>
+			<a
+				href="/idempotent-toggle"
+				class="group grid grid-cols-[auto_1fr_auto] items-center gap-5 border-y border-[#20201d]/25 py-6 transition-colors hover:border-[#20201d] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[#f85f39]"
+			>
+				<span class="font-mono text-xs text-[#f85f39]">001</span>
+				<span>
+					<strong class="block text-xl font-extrabold tracking-[-0.03em]">冪等なトグル</strong>
+					<span class="mt-1 block text-xs leading-6 text-[#6b675e]">
+						冪等性のあるトグルスイッチとトグルボタンの実験
+					</span>
+				</span>
+				<ArrowUpRight
+					size={20}
+					strokeWidth={2}
+					aria-hidden="true"
+					class="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+				/>
+			</a>
+		</section>
+
+		<footer
+			class="mt-auto flex items-center justify-between pt-20 font-mono text-[0.6rem] tracking-[0.16em] text-[#77736a] uppercase"
+		>
+			<span>TATo UI PLAYGROUND</span>
+		</footer>
+	</main>
+</BaseLayout>
