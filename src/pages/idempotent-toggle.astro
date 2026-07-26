@@ -21,12 +21,12 @@ const description =
 	socialImageUrl="https://ui.tato.bio/idempotent-toggle-og.png"
 >
 	<main class="mx-auto w-full max-w-[52rem] px-5 py-12 sm:px-8 sm:py-20">
-		<header class="mb-16 border-b-2 border-[#20201d] pb-10 sm:mb-24">
+		<header class="mb-16 border-b-2 border-[#20201d] pb-10">
 			<p class="mb-4 font-mono text-[0.65rem] font-semibold tracking-[0.2em] uppercase">
-				UI EXPERIMENT / 001
+				<a href="/">TATo UI PLAYGROUND</a> / 001
 			</p>
 			<h1 class="text-[clamp(2.6rem,10vw,5.7rem)] leading-[0.95] font-extrabold tracking-[-0.07em]">
-				冪等な<br class="sm:hidden" />トグル
+				冪等なトグル
 			</h1>
 			<p class="mt-7 max-w-2xl border-l-4 border-[#f85f39] pl-4 text-[0.78rem] leading-7 text-[#5d5a52]">
 				注意: このページは2026年7月27日に急遽、構築されました。そのため、今後ページが削除されたり、内容や構造が大きく変更される場合があります。あらかじめ、ご了承ください。
@@ -63,9 +63,9 @@ const description =
 				<p>また、一般的なトグルボタンについても、まったく同じ特徴を持つと言えます。</p>
 
 				<TrioDemo label="一般的なトグルボタンの例">
-					<StandardToggleButton slot="off" label="自動保存" />
-					<StandardToggleButton slot="on" defaultOn label="自動保存" />
-					<StandardToggleButton slot="disabled" disabled label="自動保存" />
+					<StandardToggleButton slot="off" label="ほげほげ" />
+					<StandardToggleButton slot="on" defaultOn label="ほげほげ" />
+					<StandardToggleButton slot="disabled" disabled label="ほげほげ" />
 				</TrioDemo>
 
 				<p>
@@ -76,16 +76,16 @@ const description =
 			<section>
 				<h2><span>02</span> 冪等なトグルスイッチ</h2>
 				<p>
-					一般的な、非冪等なトグルスイッチの特徴を挙げたうえで「冪等なトグルスイッチ」の特徴を想像してみると、いくつかのパターンが考えられます。
+					一般的な、つまり非冪等なトグルスイッチの特徴を挙げたうえで、「冪等なトグルスイッチ」の特徴を想像してみると、いくつかのパターンが考えられます。
 				</p>
 
 				<h3>① 2 つのターゲット領域から成るトグルスイッチ</h3>
 				<p>このトグルスイッチは、「状態の表現」と「状態の操作」について、以下の特徴を持っています。</p>
 				<ul>
 					<li>要素自身が現在の状態を表現している</li>
-					<li><strong>要素全体が分割された 2 つのターゲット領域から構成される</strong></li>
-					<li><strong>要素の左側を操作すると必ず状態が OFF になる</strong></li>
-					<li><strong>要素の右側を操作すると必ず状態が ON になる</strong></li>
+					<li>要素全体が<strong>分割された 2 つ</strong>のターゲット領域から構成される</li>
+					<li>要素の左側を操作すると<strong>必ず</strong>状態が OFF になる</li>
+					<li>要素の右側を操作すると<strong>必ず</strong>状態が ON になる</li>
 				</ul>
 
 				<ComparisonDemo label="非冪等なトグルスイッチと冪等なトグルスイッチの比較">
@@ -94,9 +94,7 @@ const description =
 				</ComparisonDemo>
 
 				<p>
-					このトグルスイッチは、確かに冪等性のある操作ができますが、以下の 2
-					つの大きな欠点があります。ターゲット領域が狭く誤操作を招きやすいうえに、要素の実際の見た目と操作できる部分とに乖離があり、優れた UI
-					とは言い難いでしょう。フィッツの法則が指摘する、少なくとも以下の 2 つの内容に違反しています。
+					このトグルスイッチは、確かに冪等性のある操作ができますが、ターゲット領域が狭く誤操作を招きやすいうえに、要素の実際の見た目と操作できる部分とに乖離があり、優れた UI とは言い難いでしょう。フィッツの法則が指摘する、少なくとも以下の 2 つの内容に違反しています。
 				</p>
 				<ol>
 					<li>タッチターゲットは十分に大きくなければならない</li>
@@ -118,10 +116,10 @@ const description =
 				<ul>
 					<li>要素自身が現在の状態を表現している</li>
 					<li>要素全体が 1 つのターゲット領域から構成される</li>
-					<li><strong>複数の操作を受け付ける</strong></li>
-					<li><strong>単押しでは何も起こらない（状態を反転させない）</strong></li>
-					<li><strong>タップまたはクリックしたまま、左側にドラッグすることで状態を OFF にする</strong></li>
-					<li><strong>タップまたはクリックしたまま、右側にドラッグすることで状態を ON にする</strong></li>
+					<li><strong>複数の</strong>操作を受け付ける</li>
+					<li>単押しでは<strong>何も起こらない</strong>（状態を反転させない）</li>
+					<li>タップまたはクリックしたまま、左側に<strong>ドラッグする</strong>ことで状態を OFF にする</li>
+					<li>タップまたはクリックしたまま、右側に<strong>ドラッグする</strong>ことで状態を ON にする</li>
 				</ul>
 
 				<ComparisonDemo label="非冪等なトグルスイッチとドラッグ操作型の比較">
@@ -146,25 +144,25 @@ const description =
 				</p>
 				<ul>
 					<li>要素自身が現在の状態を表現している</li>
-					<li><strong>1 つのトグルボタングループ要素は 2 つのボタンから構成される</strong></li>
-					<li><strong>それぞれのボタンはラジオボタンのような冪等な振る舞いをする</strong></li>
-					<li><strong>左側のボタンを操作すると必ず状態を OFF にする</strong></li>
-					<li><strong>右側のボタンを操作すると必ず状態を ON にする</strong></li>
+					<li>1 つのトグルボタングループ要素は <strong>2 つの</strong>ボタンから構成される</li>
+					<li>それぞれのボタンはラジオボタンのような<strong>冪等な</strong>振る舞いをする</li>
+					<li>左側のボタンを操作すると<strong>必ず</strong>状態を OFF にする</li>
+					<li>右側のボタンを操作すると<strong>必ず</strong>状態を ON にする</li>
 				</ul>
 
 				<ComparisonDemo label="非冪等なトグルボタンと冪等なトグルボタンの比較">
-					<StandardToggleButton slot="non-idempotent" label="自動保存" />
+					<StandardToggleButton slot="non-idempotent" label="ほげほげ" />
 					<IdempotentToggleButtonGroup slot="idempotent" />
 				</ComparisonDemo>
 
 				<p>
-					このトグルボタンは冪等性のある操作ができますが、これであれば、ラジオボタングループを使うのが良いかもしれません。
+					このトグルボタンは冪等性のある操作ができますが、これであれば、ラジオボタングループを使うほうが良いかもしれません。
 				</p>
 			</section>
 		</article>
 
 		<footer class="mt-24 flex items-center justify-between border-t border-[#20201d]/25 pt-5 font-mono text-[0.6rem] tracking-[0.16em] text-[#77736a] uppercase">
-			<span>UI EXPERIMENT</span>
+			<span>TATo UI PLAYGROUND</span>
 			<span>2026—07—27</span>
 		</footer>
 	</main>
@@ -177,7 +175,7 @@ const description =
 	}
 
 	.article section + section {
-		margin-top: 7rem;
+		margin-top: 5rem;
 	}
 
 	.article h2 {
@@ -194,14 +192,12 @@ const description =
 	.article h2 span {
 		color: #f85f39;
 		font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-		font-size: 0.65rem;
+		font-size: 1.2rem;
 		letter-spacing: 0;
 	}
 
 	.article h3 {
 		margin: 4.5rem 0 1.5rem;
-		padding-top: 1.5rem;
-		border-top: 1px solid rgb(32 32 29 / 25%);
 		font-size: clamp(1.25rem, 3vw, 1.55rem);
 		font-weight: 800;
 		letter-spacing: -0.035em;
@@ -218,6 +214,7 @@ const description =
 	}
 
 	.article strong {
+	  color: #f85f39;
 		font-weight: 800;
 		text-decoration: underline;
 		text-decoration-color: #f85f39;
@@ -227,11 +224,8 @@ const description =
 
 	.article ul,
 	.article ol {
-		margin: 1.6rem 0 0;
+		margin: 1.6rem 0;
 		padding: 1.25rem 1.25rem 1.25rem 3rem;
-		border: 1px solid rgb(32 32 29 / 14%);
-		border-radius: 0.75rem;
-		background: rgb(255 254 249 / 65%);
 	}
 
 	.article li {

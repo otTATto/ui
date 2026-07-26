@@ -9,9 +9,11 @@ const { label } = Astro.props;
 <div class="trio-demo" aria-label={label}>
 	<div class="trio-demo__item">
 		<slot name="off" />
+		<span class="trio-demo__status">off</span>
 	</div>
 	<div class="trio-demo__item">
 		<slot name="on" />
+		<span class="trio-demo__status">on</span>
 	</div>
 	<div class="trio-demo__item">
 		<slot name="disabled" />
