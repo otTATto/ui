@@ -6,20 +6,54 @@ interface Props {
 const { label } = Astro.props;
 ---
 
-<div class="trio-demo" aria-label={label}>
-	<div class="trio-demo__item">
+<div class="trio-demo" aria-label={label} data-trio-demo>
+	<div class="trio-demo__item" data-trio-item>
 		<slot name="off" />
-		<span class="trio-demo__status">off</span>
+		<span class="trio-demo__status" data-trio-state>off</span>
 	</div>
-	<div class="trio-demo__item">
+	<div class="trio-demo__item" data-trio-item>
 		<slot name="on" />
-		<span class="trio-demo__status">on</span>
+		<span class="trio-demo__status" data-trio-state>on</span>
 	</div>
 	<div class="trio-demo__item">
 		<slot name="disabled" />
 		<span class="trio-demo__status">disabled</span>
 	</div>
 </div>
+
+<script>
+	type ToggleState = 'off' | 'on';
+
+	const getToggleState = (control: HTMLElement): ToggleState => {
+		const stateAttribute = control.hasAttribute('aria-checked')
+			? 'aria-checked'
+			: 'aria-pressed';
+
+		return control.getAttribute(stateAttribute) === 'true' ? 'on' : 'off';
+	};
+
+	document.querySelectorAll<HTMLElement>('[data-trio-demo]').forEach((demo) => {
+		demo.querySelectorAll<HTMLElement>('[data-trio-state]').forEach((status) => {
+			const item = status.closest<HTMLElement>('[data-trio-item]');
+			const control = item?.querySelector<HTMLElement>('[aria-checked], [aria-pressed]');
+			if (!control) {
+				return;
+			}
+
+			const updateStatus = (): void => {
+				const state = getToggleState(control);
+				status.textContent = state;
+				status.dataset.state = state;
+			};
+
+			updateStatus();
+			new MutationObserver(updateStatus).observe(control, {
+				attributes: true,
+				attributeFilter: ['aria-checked', 'aria-pressed'],
+			});
+		});
+	});
+</script>
 
 <style>
 	.trio-demo {
@@ -53,6 +87,10 @@ const { label } = Astro.props;
 		font-size: 0.68rem;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
+	}
+
+	.trio-demo__status[data-state='on'] {
+		color: #f85f39;
 	}
 
 	@media (max-width: 540px) {
