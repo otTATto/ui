@@ -1,4 +1,5 @@
 ---
+import { ExternalLink } from 'lucide-astro';
 import ComparisonDemo from '../components/idempotent-toggle/ComparisonDemo.astro';
 import DirectionalSwitch from '../components/idempotent-toggle/DirectionalSwitch.astro';
 import IdempotentToggleButtonGroup from '../components/idempotent-toggle/IdempotentToggleButtonGroup.astro';
@@ -28,8 +29,20 @@ const description =
 			<h1 class="text-[clamp(2.6rem,10vw,5.7rem)] leading-[0.95] font-extrabold tracking-[-0.07em]">
 				冪等なトグル
 			</h1>
+			<p class="mt-7 max-w-2xl border-l-4 border-[#5c9084] pl-4 text-[0.78rem] leading-7 text-[#5d5a52]">
+				このページは、LT 会の登壇資料「<a
+					href="https://speakerdeck.com/ottatto/botanuinomi-deng-xing-nohua-wositaravimmernici-satutiyatuta"
+					target="_blank"
+					rel="noopener"
+					aria-label="ボタンUIの冪等性の話をしたらVimmerに刺さっちゃった（新しいタブで開く）"
+					class="inline-flex items-center gap-1 font-bold text-[#3f7167] underline decoration-[#5c9084]/55 decoration-1 underline-offset-[0.22em] transition-colors hover:text-[#f85f39] hover:decoration-[#f85f39] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#f85f39]"
+				>
+					ボタンUIの冪等性の話をしたらVimmerに刺さっちゃった
+					<ExternalLink size={12} strokeWidth={2.25} aria-hidden="true" />
+				</a>」に端を発します。
+			</p>
 			<p class="mt-7 max-w-2xl border-l-4 border-[#f85f39] pl-4 text-[0.78rem] leading-7 text-[#5d5a52]">
-				注意: このページは2026年7月27日に急遽、構築されました。そのため、今後ページが削除されたり、内容や構造が大きく変更される場合があります。あらかじめ、ご了承ください。
+				<strong>注意</strong>: このページは急遽、構築されました。今後ページが削除されたり、内容や構造が大きく変更される場合があります。あらかじめ、ご了承ください。
 			</p>
 		</header>
 
