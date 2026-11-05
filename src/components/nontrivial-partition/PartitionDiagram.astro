@@ -1,0 +1,101 @@
+---
+/**
+ * 全体集合を 2 つの部分 A・B に分けた様子を表す図
+ *
+ * - variant: 'exclusive' なら A・B が排反な分割、'overlapping' なら A・B が重なる（排反ではない）分け方
+ *
+ * NOTE:
+ *   - どちらの variant でも A・B の和集合は全体集合と一致させ、「排反かどうか」だけが違う図にしている
+ */
+interface Props {
+	variant: 'exclusive' | 'overlapping';
+}
+
+const { variant } = Astro.props;
+
+const ARIA_LABELS = {
+	exclusive: '全体集合が、重なりを持たない A と B の 2 つに分けられている図',
+	overlapping: '全体集合が A と B の 2 つに分けられているが、A と B が中央で重なっている図',
+} as const satisfies Record<Props['variant'], string>;
+---
+
+<svg
+	class="partition-diagram"
+	viewBox="0 0 240 150"
+	role="img"
+	aria-label={ARIA_LABELS[variant]}
+>
+	{
+		variant === 'exclusive' ? (
+			<>
+				<rect class="partition-diagram__b" x="10" y="10" width="220" height="130" rx="14" />
+				<path
+					class="partition-diagram__a"
+					d="M24 10 H120 C100 60 140 90 112 140 H24 Q10 140 10 126 V24 Q10 10 24 10 Z"
+				/>
+				<path class="partition-diagram__divider" d="M120 10 C100 60 140 90 112 140" />
+				<text x="62" y="80">A</text>
+				<text x="178" y="80">B</text>
+			</>
+		) : (
+			<>
+				<rect class="partition-diagram__a" x="10" y="10" width="140" height="130" rx="14" />
+				<rect class="partition-diagram__b" x="90" y="10" width="140" height="130" rx="14" />
+				<rect class="partition-diagram__overlap" x="90" y="10" width="60" height="130" />
+				<line class="partition-diagram__divider" x1="90" y1="10" x2="90" y2="140" />
+				<line class="partition-diagram__divider" x1="150" y1="10" x2="150" y2="140" />
+				<text x="46" y="80">A</text>
+				<text x="186" y="80">B</text>
+				<text class="partition-diagram__overlap-label" x="120" y="80">AかつB</text>
+			</>
+		)
+	}
+	<rect class="partition-diagram__frame" x="10" y="10" width="220" height="130" rx="14" />
+</svg>
+
+<style>
+	.partition-diagram {
+		width: 100%;
+		max-width: 15rem;
+		height: auto;
+	}
+
+	.partition-diagram__a {
+		fill: #d3e4df;
+	}
+
+	.partition-diagram__b {
+		fill: #f6dcd0;
+	}
+
+	.partition-diagram__overlap {
+		fill: #f85f39;
+		fill-opacity: 0.55;
+	}
+
+	.partition-diagram__divider {
+		fill: none;
+		stroke: #20201d;
+		stroke-dasharray: 5 4;
+		stroke-width: 1.5;
+	}
+
+	.partition-diagram__frame {
+		fill: none;
+		stroke: #20201d;
+		stroke-width: 2.5;
+	}
+
+	.partition-diagram text {
+		fill: #20201d;
+		font-size: 20px;
+		font-weight: 800;
+		text-anchor: middle;
+		dominant-baseline: middle;
+	}
+
+	.partition-diagram .partition-diagram__overlap-label {
+		fill: #fffef9;
+		font-size: 13px;
+	}
+</style>

@@ -1,0 +1,200 @@
+---
+import PairFigure from '../components/nontrivial-partition/PairFigure.astro';
+import PartitionDiagram from '../components/nontrivial-partition/PartitionDiagram.astro';
+import SentenceSelect from '../components/nontrivial-partition/SentenceSelect.astro';
+import SettingToggleRow from '../components/nontrivial-partition/SettingToggleRow.astro';
+import WeekdaySet from '../components/nontrivial-partition/WeekdaySet.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = '非自明な分割にトグルスイッチを使うな';
+const description =
+	'二者択一だからといってトグルスイッチが最適とは限らない場合について、具体例と原因、解決策を考えているページです。';
+
+const WEEK_START_STATE_LABELS = { off: '日曜日', on: '月曜日' } as const;
+const WEEK_START_OPTIONS = ['月曜日', '日曜日'] as const;
+---
+
+<BaseLayout
+	title={title}
+	description={description}
+	canonicalUrl="https://ui.tato.bio/nontrivial-partition"
+>
+	<main class="mx-auto w-full max-w-[52rem] px-5 py-12 sm:px-8 sm:py-20">
+		<header class="mb-16 border-b-2 border-[#20201d] pb-10">
+			<p class="mb-4 font-mono text-[0.65rem] font-semibold tracking-[0.2em] uppercase">
+				<a href="/">TATo UI PLAYGROUND</a> / 002
+			</p>
+			<h1 class="text-[clamp(2.2rem,8vw,4.6rem)] leading-[1.05] font-extrabold tracking-[-0.07em]">
+				非自明な分割に<br />トグルスイッチを使うな
+			</h1>
+		</header>
+
+		<article class="article">
+			<section>
+				<p>
+					トグルスイッチは、二者択一な選択をユーザーに迫るとき、しばしば用いられる UI 部品です。では、二者択一の<strong>あらゆる</strong>場合において、切り替え操作の部品はトグルスイッチが最適なのでしょうか。
+				</p>
+			</section>
+
+			<section>
+				<h2><span>01</span> トグルスイッチが直感的ではない例</h2>
+				<p>以下は、とあるメモ・アプリケーションの設定画面で見かけた、一見戸惑ってしまった UI です。</p>
+
+				<SettingToggleRow
+					id="week-start-original"
+					label="とあるメモ・アプリケーションの、週の始まりを設定するトグルスイッチ"
+					title="週の始めを月曜日にする"
+					description="これはN◯tionでのカレンダーの表示方法に影響します"
+				/>
+
+				<p>すぐにわかったのは「現在オフになっている」ということだけです。その後で、</p>
+				<ul>
+					<li>ではオフの今、どういう状態なんだろうか？</li>
+					<li>オンに切り替えると、どういう状態になるだろうか？</li>
+				</ul>
+				<p>と少し考えてしまいました。少し落ち着いて考えれば、</p>
+				<ul>
+					<li>現在は「週の始めを月曜日」がオフだから、週の始めは月曜日<strong>ではない</strong></li>
+					<li>一般にカレンダーには「月曜はじまり」のものと「日曜はじまり」のものがある</li>
+					<li>現在「月曜はじまり<strong>ではない</strong>」ということは「<strong>日曜はじまり</strong>」ということか</li>
+					<li>そして、オンに切り替えると今度は「月曜はじまり」になる</li>
+				</ul>
+				<p>
+					とわかります。しかし、どうでしょうか、この UI はどれほど直感的でしょうか。充分にヒューマン・フレンドリーだと言えるでしょうか。
+				</p>
+			</section>
+
+			<section>
+				<h2><span>02</span> 非自明な分割にトグルスイッチを使うな</h2>
+				<p>
+					この UI が直感的に思えないのは、「<strong>自明ではない</strong>分割がされた二者択一を訊く選択肢にトグルスイッチを使ってしまっているから」だと、私は思います。高校数学の内容を補足すると、
+				</p>
+				<ul>
+					<li><strong>分割</strong>: 全体を<strong>排反</strong>かつ漏れなく複数の部分に分けること</li>
+					<li><strong>排反</strong>: 2 つの事象が同時に起こらないこと</li>
+				</ul>
+				<p>でしたね。図で整理すると以下のようになります。</p>
+
+				<PairFigure label="排反な分割と、排反ではない分け方の比較" leftCaption="排反な分割" rightCaption="排反ではない">
+					<PartitionDiagram slot="left" variant="exclusive" />
+					<PartitionDiagram slot="right" variant="overlapping" />
+				</PairFigure>
+
+				<p>今回の例に話を戻してみましょう。以下の 2 つについて考えます。</p>
+				<ul>
+					<li>週の始まりは「日曜日」</li>
+					<li>週の始まりは「月曜日」</li>
+				</ul>
+				<p>この 2 つについて、以下のチェックリストを確認しましょう。</p>
+				<ol>
+					<li>この 2 つは<strong>排反</strong>である</li>
+					<li>この 2 つの和集合は<strong>自然な</strong>まとまりである</li>
+				</ol>
+				<p>
+					1 について、週の始まりが「日曜日」なことと「月曜日」なことは両立しないので、確かに排反ですね。良さそうです。
+				</p>
+				<p>
+					2 について、週の始まりが「日曜日」なことと「月曜日」なことだけから成るまとまりは、自然でしょうか。今は「週」の話をしています。1
+					週間は 7 日間で、7 種類の曜日から構成されます。（謎解きでは、この事実が暗黙的に使用されたりしますね。）では、そのうちの
+					2 つ「日曜日」と「月曜日」だけをグループにするのは、果たして自然でしょうか。
+				</p>
+
+				<PairFigure label="7 曜日から成る集合と、2 曜日から成る集合の比較" leftCaption="自明な分割" rightCaption="非自明な分割" isEmphasizedLeft={true} height="fit">
+					<WeekdaySet slot="left" members={['日', '月', '火', '水', '木', '金', '土']} />
+					<WeekdaySet slot="right" members={['日', '月']} />
+				</PairFigure>
+
+				<p>この場合、左は自然な和集合ですが、右はそうではありません。ここで左を「自明な分割」、そして右を「自明<strong>ではない</strong>分割」あるいは「<strong>非</strong>自明な分割」と呼びたいと思います。</p>
+				<p>そして、ここでの僕の結論は「<strong>非自明な分割にトグルスイッチを使うな</strong>」になります。</p>
+			</section>
+
+			<section>
+				<h2><span>03</span> 排反ですらないトグルスイッチはもっと酷い</h2>
+				<p>ちょっと脱線です。</p>
+				<p>
+					先程のチェックリストの 1 つ目すら守れていないようなトグルスイッチを想像しましょう。つまり、選択肢が排反ですらないトグルスイッチです。例えば、オフのときはタイトルだけを、オンのときはタイトルも本文も検索する、以下のようなトグルスイッチです。
+				</p>
+
+				<SettingToggleRow
+					id="search-target"
+					label="オフのときはタイトルだけを、オンのときはタイトルも本文も検索するトグルスイッチ"
+					title="本文も検索する"
+					description=""
+				/>
+
+				<p>
+					オフのとき何を検索するのか、オンにしたら検索対象がどう変わるのか、わかりにくいですね。トグルスイッチのみならず、ユーザーに<strong>単一の</strong>選択をさせるインターフェースを提供するとき、その選択肢は排反であるべきです。
+				</p>
+			</section>
+
+			<section>
+				<h2><span>04</span> 説明してあげればいいじゃない！←本当に？</h2>
+				<p>これも脱線です。</p>
+				<p>
+					分割された選択肢の和集合が自明じゃないのがいけないんだと言って、では「ちゃんと説明してあげよう」とするのは、本当に親切でしょうか。例えば、以下のようなトグルスイッチを考えてみましょう。
+				</p>
+
+				<SettingToggleRow
+					id="week-start-explained"
+					label="オンとオフそれぞれの状態を説明文で補足した、週の始まりを設定するトグルスイッチ"
+					title="週の始めを月曜日にする"
+					description="オンにすると月曜はじまり、オフにすると日曜はじまりになります"
+				/>
+
+				<p>
+					こうすることで、オフの状態がどういう状態か、オンに切り替えるとどうなるかが「説明」されました。確かにこれで、説明を読めばユーザーは理解できますね。
+				</p>
+				<p>
+					でも、それは言葉ですべてを説明してしまっただけです。喋れば伝わるのは当たり前で、逆に言えば、<strong>文字以外の UI では伝わっていない</strong>ということでもあります。説明文は、文字以外で伝えきれないときの最終手段に留めたいところです。
+				</p>
+			</section>
+
+			<section>
+				<h2><span>05</span> 非自明な分割にはプルダウンメニューを使おう</h2>
+				<p>これは脱線じゃ<strong>ありません</strong>。</p>
+				<p>
+					では、自明ではない分割がされた選択を問う場合は、どういう UI が望ましいのでしょうか。個人的な解決策は、プルダウンメニューを使うことです。最初に紹介した
+					N◯tion の例は、例えば以下のようにすると、充分にわかりやすくなる気がします。
+				</p>
+
+				<PairFigure label="週の始まりを選ぶプルダウンメニュー" leftCaption="閉じた状態" rightCaption="開いた状態" height="tall">
+					<SentenceSelect
+						slot="left"
+						id="week-start-select-closed"
+						before="週の始まりを"
+						after="にする"
+						label="週の始まり"
+						options={WEEK_START_OPTIONS}
+						defaultValue="日曜日"
+					/>
+					<SentenceSelect
+						slot="right"
+						id="week-start-select-open"
+						before="週の始まりを"
+						after="にする"
+						label="週の始まり"
+						options={WEEK_START_OPTIONS}
+						defaultValue="日曜日"
+						defaultOpen
+					/>
+				</PairFigure>
+
+				<p>
+					選択肢が 2 つだということは、プルダウンメニューを開くまでわかりませんが、<strong>あらかじめユーザーに明示する必要がまったくない</strong>ので、これで構いません。設定画面が開かれた段階では、ユーザーには「カレンダーの週始まりの曜日を変更できるんだな」ということさえ提示できていれば良いのです。そして、ユーザーがついにこのプルダウンメニューを開いてはじめて「うん、やっぱり月曜日か日曜日の
+					2 択だよね」と思わせれば良いのです。
+				</p>
+
+				<hr class="my-14 border-[#20201d]/25" />
+
+				<p>
+					ここまで、トグルスイッチが最適とは言い難い状況について、その具体例と原因の分析、解決策のアイデアを紹介してきました。「二者択一だから」と安易にトグルスイッチに飛びつくのは、最適解ではないかもしれません。そのインターフェースが、ユーザにとって「本当に<strong>自然か</strong>どうか」をぜひ考えていきましょう！
+				</p>
+			</section>
+		</article>
+
+		<footer class="mt-24 flex items-center justify-between border-t border-[#20201d]/25 pt-5 font-mono text-[0.6rem] tracking-[0.16em] text-[#77736a] uppercase">
+			<span>TATo UI PLAYGROUND</span>
+			<span>2026—11—06</span>
+		</footer>
+	</main>
+</BaseLayout>

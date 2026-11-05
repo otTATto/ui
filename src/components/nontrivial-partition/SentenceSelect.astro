@@ -1,0 +1,307 @@
+---
+import { ChevronDown } from 'lucide-astro';
+
+/**
+ * 「週の始まりを [月曜日 ▾] にする」のように、文中にプルダウンメニューを埋め込んだ設定項目
+ *
+ * - id           : 内部要素の id の接頭辞（ページ内で一意にする）
+ * - before       : プルダウンメニューより前の文
+ * - after        : プルダウンメニューより後の文
+ * - label        : プルダウンメニューのアクセシブルな名前
+ * - options      : 選択肢
+ * - defaultValue : 初期の選択値（options に含まれない場合は先頭の選択肢）
+ * - defaultOpen  : 初期状態で選択肢を開いておくかどうか
+ *
+ * NOTE:
+ *   - ネイティブの <select> はスクリプトから開いた状態にできないため、
+ *     WAI-ARIA の select-only combobox パターンで自作している
+ */
+interface Props {
+	id: string;
+	before: string;
+	after: string;
+	label: string;
+	options: readonly string[];
+	defaultValue?: string;
+	defaultOpen?: boolean;
+}
+
+const { id, before, after, label, options, defaultValue, defaultOpen = false } = Astro.props;
+const listboxId = `${id}-listbox`;
+const optionId = (index: number): string => `${id}-option-${index}`;
+const selectedIndex = Math.max(0, defaultValue === undefined ? 0 : options.indexOf(defaultValue));
+---
+
+<div class="sentence-select">
+	<span>{before}</span>
+	<span class="sentence-select__field" data-sentence-select>
+		<span
+			class="sentence-select__trigger"
+			role="combobox"
+			tabindex="0"
+			aria-label={label}
+			aria-haspopup="listbox"
+			aria-controls={listboxId}
+			aria-expanded={defaultOpen ? 'true' : 'false'}
+			aria-activedescendant={defaultOpen ? optionId(selectedIndex) : undefined}
+			data-sentence-select-trigger
+		>
+			<span data-sentence-select-value>{options[selectedIndex]}</span>
+			<ChevronDown size={16} strokeWidth={2.5} aria-hidden="true" class="sentence-select__chevron" />
+		</span>
+		<ul
+			id={listboxId}
+			class="sentence-select__listbox"
+			role="listbox"
+			aria-label={label}
+			tabindex="-1"
+			hidden={!defaultOpen}
+		>
+			{
+				options.map((option, index) => (
+					<li
+						id={optionId(index)}
+						class="sentence-select__option"
+						role="option"
+						aria-selected={index === selectedIndex ? 'true' : 'false'}
+						data-active={defaultOpen && index === selectedIndex ? '' : undefined}
+					>
+						{option}
+					</li>
+				))
+			}
+		</ul>
+	</span>
+	<span>{after}</span>
+</div>
+
+<script>
+	const setupSentenceSelect = (field: HTMLElement): void => {
+		const trigger = field.querySelector<HTMLElement>('[data-sentence-select-trigger]');
+		const valueLabel = field.querySelector<HTMLElement>('[data-sentence-select-value]');
+		const listbox = field.querySelector<HTMLUListElement>('[role="listbox"]');
+		if (!trigger || !valueLabel || !listbox) {
+			return;
+		}
+
+		const options = Array.from(listbox.querySelectorAll<HTMLLIElement>('[role="option"]'));
+		if (options.length === 0) {
+			return;
+		}
+
+		let selectedIndex = Math.max(
+			0,
+			options.findIndex((option) => option.getAttribute('aria-selected') === 'true'),
+		);
+		let activeIndex = selectedIndex;
+		// 初期状態で開いているデモを、読み手が触れる前にページ内の別の操作で閉じてしまわないようにする
+		let hasInteracted = false;
+		field.addEventListener(
+			'pointerdown',
+			() => {
+				hasInteracted = true;
+			},
+			{ capture: true },
+		);
+		trigger.addEventListener('focus', () => {
+			hasInteracted = true;
+		});
+
+		const isOpen = (): boolean => trigger.getAttribute('aria-expanded') === 'true';
+
+		const setActive = (index: number): void => {
+			activeIndex = Math.min(Math.max(index, 0), options.length - 1);
+			options.forEach((option, i) => {
+				option.toggleAttribute('data-active', i === activeIndex);
+			});
+			trigger.setAttribute('aria-activedescendant', options[activeIndex].id);
+		};
+
+		const open = (): void => {
+			trigger.setAttribute('aria-expanded', 'true');
+			listbox.hidden = false;
+			setActive(selectedIndex);
+		};
+
+		const close = (): void => {
+			trigger.setAttribute('aria-expanded', 'false');
+			trigger.removeAttribute('aria-activedescendant');
+			listbox.hidden = true;
+		};
+
+		const select = (index: number): void => {
+			selectedIndex = index;
+			options.forEach((option, i) => {
+				option.setAttribute('aria-selected', String(i === index));
+			});
+			valueLabel.textContent = options[index].textContent?.trim() ?? '';
+			close();
+		};
+
+		trigger.addEventListener('click', () => {
+			if (isOpen()) {
+				close();
+				return;
+			}
+			open();
+		});
+
+		trigger.addEventListener('keydown', (event) => {
+			if (!isOpen()) {
+				const OPEN_KEYS = ['ArrowDown', 'ArrowUp', 'Enter', ' '];
+				if (!OPEN_KEYS.includes(event.key)) {
+					return;
+				}
+				event.preventDefault();
+				open();
+				return;
+			}
+
+			const OPENED_KEY_HANDLERS: Partial<Record<string, () => void>> = {
+				ArrowDown: () => setActive(activeIndex + 1),
+				ArrowUp: () => setActive(activeIndex - 1),
+				Home: () => setActive(0),
+				End: () => setActive(options.length - 1),
+				Enter: () => select(activeIndex),
+				' ': () => select(activeIndex),
+				Escape: close,
+			};
+			const handler = OPENED_KEY_HANDLERS[event.key];
+			if (handler) {
+				event.preventDefault();
+				handler();
+				return;
+			}
+			if (event.key === 'Tab') {
+				close();
+			}
+		});
+
+		// 選択肢を押したときにトリガーからフォーカスが外れないようにする
+		listbox.addEventListener('pointerdown', (event) => {
+			event.preventDefault();
+		});
+
+		options.forEach((option, index) => {
+			option.addEventListener('pointerenter', () => setActive(index));
+			option.addEventListener('click', () => {
+				select(index);
+				trigger.focus();
+			});
+		});
+
+		document.addEventListener('pointerdown', (event) => {
+			if (!hasInteracted || !isOpen()) {
+				return;
+			}
+			if (event.target instanceof Node && !field.contains(event.target)) {
+				close();
+			}
+		});
+
+		trigger.addEventListener('blur', () => {
+			if (isOpen()) {
+				close();
+			}
+		});
+	};
+
+	document.querySelectorAll<HTMLElement>('[data-sentence-select]').forEach(setupSentenceSelect);
+</script>
+
+<style>
+	.sentence-select {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 0.4rem;
+		font-size: 0.95rem;
+		font-weight: 700;
+	}
+
+	.sentence-select__field {
+		position: relative;
+		display: inline-block;
+	}
+
+	.sentence-select__trigger {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.35rem 0.6rem 0.35rem 0.85rem;
+		cursor: pointer;
+		border: 2px solid #20201d;
+		border-radius: 0.6rem;
+		background: #fffef9;
+		box-shadow: 0 3px 0 #20201d;
+		user-select: none;
+		transition: background-color 150ms ease;
+	}
+
+	.sentence-select__trigger:hover {
+		background: #f1ede2;
+	}
+
+	.sentence-select__trigger:focus-visible {
+		outline: 3px solid #ff6a43;
+		outline-offset: 4px;
+	}
+
+	.sentence-select__trigger[aria-expanded='true'] {
+		background: #f1ede2;
+	}
+
+	.sentence-select__chevron {
+		transition: transform 150ms ease;
+	}
+
+	.sentence-select__trigger[aria-expanded='true'] .sentence-select__chevron {
+		transform: rotate(180deg);
+	}
+
+	.sentence-select__listbox {
+		position: absolute;
+		z-index: 10;
+		top: calc(100% + 0.5rem);
+		left: 0;
+		min-width: 100%;
+		margin: 0;
+		padding: 0.3rem;
+		border: 2px solid #20201d;
+		border-radius: 0.6rem;
+		background: #fffef9;
+		box-shadow: 0 8px 24px rgb(58 52 38 / 18%);
+		list-style: none;
+	}
+
+	.sentence-select__listbox[hidden] {
+		display: none;
+	}
+
+	.sentence-select__option {
+		padding: 0.3rem 0.6rem;
+		cursor: pointer;
+		border-radius: 0.4rem;
+		white-space: nowrap;
+	}
+
+	.sentence-select__option[data-active] {
+		background: #f1ede2;
+	}
+
+	.sentence-select__option[aria-selected='true'] {
+		color: #f85f39;
+	}
+
+	.sentence-select__option[aria-selected='true']::after {
+		content: ' ✓';
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.sentence-select__trigger,
+		.sentence-select__chevron {
+			transition: none;
+		}
+	}
+</style>

@@ -5,7 +5,7 @@ import DirectionalSwitch from '../components/idempotent-toggle/DirectionalSwitch
 import IdempotentToggleButtonGroup from '../components/idempotent-toggle/IdempotentToggleButtonGroup.astro';
 import RockerSwitch from '../components/idempotent-toggle/RockerSwitch.astro';
 import SplitTargetSwitch from '../components/idempotent-toggle/SplitTargetSwitch.astro';
-import StandardSwitch from '../components/idempotent-toggle/StandardSwitch.astro';
+import StandardSwitch from '../components/common/StandardSwitch.astro';
 import StandardToggleButton from '../components/idempotent-toggle/StandardToggleButton.astro';
 import TrioDemo from '../components/idempotent-toggle/TrioDemo.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -176,100 +176,3 @@ const description =
 		</footer>
 	</main>
 </BaseLayout>
-
-<style>
-	.article {
-		font-size: clamp(0.96rem, 1.8vw, 1.06rem);
-		letter-spacing: 0.015em;
-	}
-
-	.article section + section {
-		margin-top: 5rem;
-	}
-
-	.article h2 {
-		display: flex;
-		align-items: baseline;
-		gap: 0.75rem;
-		margin: 0 0 2rem;
-		font-size: clamp(1.65rem, 5vw, 2.5rem);
-		font-weight: 800;
-		letter-spacing: -0.055em;
-		line-height: 1.25;
-	}
-
-	.article h2 span {
-		color: #f85f39;
-		font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-		font-size: 1.2rem;
-		letter-spacing: 0;
-	}
-
-	.article h3 {
-		margin: 4.5rem 0 1.5rem;
-		font-size: clamp(1.25rem, 3vw, 1.55rem);
-		font-weight: 800;
-		letter-spacing: -0.035em;
-		line-height: 1.55;
-	}
-
-	.article p {
-		margin: 0;
-		color: #363530;
-	}
-
-	.article p + p {
-		margin-top: 1.5rem;
-	}
-
-	.article strong {
-	  color: #f85f39;
-		font-weight: 800;
-		text-decoration: underline;
-		text-decoration-color: #f85f39;
-		text-decoration-thickness: 0.18em;
-		text-underline-offset: 0.15em;
-	}
-
-	.article ul,
-	.article ol {
-		margin: 1.6rem 0;
-		padding-left: 2.3rem;
-	}
-
-	.article ul {
-		list-style-type: disc;
-	}
-
-	.article ol {
-		list-style-type: decimal;
-	}
-
-	.article li {
-		padding-left: 0.35rem;
-	}
-
-	.article li + li {
-		margin-top: 0.3rem;
-	}
-
-	.article li::marker {
-		color: #f85f39;
-		font-weight: 800;
-	}
-
-	@media (max-width: 540px) {
-		.article section + section {
-			margin-top: 5.5rem;
-		}
-
-		.article h3 {
-			margin-top: 3.75rem;
-		}
-
-		.article ul,
-		.article ol {
-			padding-left: 2.25rem;
-		}
-	}
-</style>

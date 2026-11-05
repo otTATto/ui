@@ -4,6 +4,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const title = 'TATo UI Playground';
 const description = 'Web UI の表現や操作を試すための実験的な場所です。';
+
+/**
+ * 実験ページの一覧（表示順）
+ *
+ * - number     : 実験の通し番号
+ * - href       : ページのパス
+ * - title      : ページのタイトル
+ * - summary    : 一覧に表示する一行の説明
+ */
+const EXPERIMENTS = [
+	{
+		number: '001',
+		href: '/idempotent-toggle',
+		title: '冪等なトグル',
+		summary: '冪等性のあるトグルスイッチとトグルボタンの実験',
+	},
+	{
+		number: '002',
+		href: '/nontrivial-partition',
+		title: '非自明な分割にトグルスイッチを使うな',
+		summary: '二者択一でもトグルスイッチが最適とは限らないケースについて',
+	},
+] as const;
 ---
 
 <BaseLayout title={title} description={description}>
@@ -25,24 +48,32 @@ const description = 'Web UI の表現や操作を試すための実験的な場�
 			>
 				Experiments
 			</h2>
-			<a
-				href="/idempotent-toggle"
-				class="group grid grid-cols-[auto_1fr_auto] items-center gap-5 border-y border-[#20201d]/25 py-6 transition-colors hover:border-[#20201d] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[#f85f39]"
-			>
-				<span class="font-mono text-xs text-[#f85f39]">001</span>
-				<span>
-					<strong class="block text-xl font-extrabold tracking-[-0.03em]">冪等なトグル</strong>
-					<span class="mt-1 block text-xs leading-6 text-[#6b675e]">
-						冪等性のあるトグルスイッチとトグルボタンの実験
-					</span>
-				</span>
-				<ArrowUpRight
-					size={20}
-					strokeWidth={2}
-					aria-hidden="true"
-					class="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-				/>
-			</a>
+			<ul class="border-t border-[#20201d]/25">
+				{
+					EXPERIMENTS.map((experiment) => (
+						<li>
+							<a
+								href={experiment.href}
+								class="group grid grid-cols-[auto_1fr_auto] items-center gap-5 border-b border-[#20201d]/25 py-6 transition-colors hover:border-[#20201d] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[#f85f39]"
+							>
+								<span class="font-mono text-xs text-[#f85f39]">{experiment.number}</span>
+								<span>
+									<strong class="block text-xl font-extrabold tracking-[-0.03em]">{experiment.title}</strong>
+									<span class="mt-1 block text-xs leading-6 text-[#6b675e]">
+										{experiment.summary}
+									</span>
+								</span>
+								<ArrowUpRight
+									size={20}
+									strokeWidth={2}
+									aria-hidden="true"
+									class="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+								/>
+							</a>
+						</li>
+					))
+				}
+			</ul>
 		</section>
 
 		<footer

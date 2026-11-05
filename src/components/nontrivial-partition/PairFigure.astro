@@ -1,0 +1,108 @@
+---
+/**
+ * 2 つの図やデモを左右に並べて見比べるための枠（狭い画面では縦に積む）
+ *
+ * - label        : 図全体のアクセシブルな名前
+ * - leftCaption  : 左側の見出し
+ * - rightCaption      : 右側の見出し
+ * - isEmphasizedLeft  : 左側の見出しを強調色にするかどうか
+ * - isEmphasizedRight : 右側の見出しを強調色にするかどうか
+ * - height            : 各セルの高さ（'fit': 中身に合わせる / 'default': 標準 / 'tall': 開いたメニューなどが収まるよう高めにする）
+ */
+interface Props {
+	label: string;
+	leftCaption: string;
+	rightCaption: string;
+	isEmphasizedLeft?: boolean;
+	isEmphasizedRight?: boolean;
+	height?: 'fit' | 'default' | 'tall';
+}
+
+const {
+	label,
+	leftCaption,
+	rightCaption,
+	isEmphasizedLeft = false,
+	isEmphasizedRight = false,
+	height = 'default',
+} = Astro.props;
+---
+
+<figure class:list={['pair-figure', `pair-figure--${height}`]} aria-label={label}>
+	<div class="pair-figure__cell">
+		<span class:list={['pair-figure__caption', { 'pair-figure__caption--emphasized': isEmphasizedLeft }]}>
+			{leftCaption}
+		</span>
+		<slot name="left" />
+	</div>
+	<div class="pair-figure__cell">
+		<span class:list={['pair-figure__caption', { 'pair-figure__caption--emphasized': isEmphasizedRight }]}>
+			{rightCaption}
+		</span>
+		<slot name="right" />
+	</div>
+</figure>
+
+<style>
+	.pair-figure {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		margin: 2rem 0 2.75rem;
+		border: 1px solid rgb(32 32 29 / 14%);
+		border-radius: 1.5rem;
+		background:
+			linear-gradient(rgb(32 32 29 / 4%) 1px, transparent 1px),
+			linear-gradient(90deg, rgb(32 32 29 / 4%) 1px, transparent 1px),
+			#faf8f2;
+		background-size: 20px 20px;
+		box-shadow: 0 14px 40px rgb(58 52 38 / 7%);
+	}
+
+	.pair-figure__cell {
+		display: flex;
+		min-width: 0;
+		min-height: 15rem;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 1.75rem;
+		padding: 2rem 1.25rem 2.25rem;
+	}
+
+	.pair-figure__cell + .pair-figure__cell {
+		border-left: 1px dashed rgb(32 32 29 / 25%);
+	}
+
+	.pair-figure__caption {
+		padding: 0.25rem 0.65rem;
+		border: 1px solid currentColor;
+		border-radius: 999px;
+		background: #faf8f2;
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+	}
+
+	.pair-figure__caption--emphasized {
+		color: #c33b1d;
+	}
+
+	.pair-figure--fit .pair-figure__cell {
+		min-height: auto;
+	}
+
+	.pair-figure--tall .pair-figure__cell {
+		min-height: 17rem;
+	}
+
+	@media (max-width: 540px) {
+		.pair-figure {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.pair-figure__cell + .pair-figure__cell {
+			border-top: 1px dashed rgb(32 32 29 / 25%);
+			border-left: 0;
+		}
+	}
+</style>
