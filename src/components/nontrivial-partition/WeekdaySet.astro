@@ -1,0 +1,71 @@
+---
+/**
+ * 7 つの曜日のうち、指定した曜日だけを 1 つのまとまり（集合）として囲った図
+ *
+ * - members: 囲う曜日（WEEKDAYS の並び順で、先頭から連続している前提）
+ *
+ * NOTE:
+ *   - 囲わなかった曜日も薄く表示し、「1 週間から一部だけを切り出した」ことがわかるようにする
+ */
+const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'] as const;
+type Weekday = (typeof WEEKDAYS)[number];
+
+interface Props {
+	members: readonly Weekday[];
+}
+
+const { members } = Astro.props;
+const memberDays = WEEKDAYS.filter((day) => members.includes(day));
+const outsiderDays = WEEKDAYS.filter((day) => !members.includes(day));
+const ariaLabel =
+	outsiderDays.length === 0
+		? '日曜日から土曜日までの 7 曜日すべてを 1 つに囲んだ集合'
+		: `${memberDays.join('・')}の ${memberDays.length} 曜日だけを囲み、残りの曜日を外に出した集合`;
+---
+
+<div class="weekday-set" role="img" aria-label={ariaLabel}>
+	<span class="weekday-set__members">
+		{memberDays.map((day) => <span class="weekday-set__day">{day}</span>)}
+	</span>
+	{outsiderDays.map((day) => <span class="weekday-set__day weekday-set__day--outside">{day}</span>)}
+</div>
+
+<style>
+	.weekday-set {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 0.4rem;
+	}
+
+	.weekday-set__members {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.4rem;
+		padding: 0.45rem;
+		border: 2.5px solid #20201d;
+		border-radius: 1.25rem;
+		background: #f6dcd0;
+	}
+
+	.weekday-set__day {
+		display: grid;
+		width: 2.1rem;
+		height: 2.1rem;
+		place-items: center;
+		border: 2px solid #20201d;
+		border-radius: 50%;
+		background: #fffef9;
+		font-size: 0.85rem;
+		font-weight: 800;
+	}
+
+	.weekday-set__day--outside {
+		border-style: dashed;
+		border-color: rgb(32 32 29 / 35%);
+		background: transparent;
+		color: rgb(32 32 29 / 35%);
+	}
+</style>

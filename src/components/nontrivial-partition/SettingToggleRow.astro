@@ -1,0 +1,85 @@
+---
+import StandardSwitch from '../common/StandardSwitch.astro';
+
+/**
+ * 設定画面の 1 行（見出し・説明文・トグルスイッチ）を再現したデモ
+ *
+ * - id           : 行内要素の id の接頭辞（ページ内で一意にする）
+ * - title        : 設定項目の見出し
+ * - description  : 設定項目の説明文
+ * - defaultOn    : 初期状態を ON にするかどうか
+ * - label        : デモ全体のアクセシブルな名前
+ */
+interface Props {
+	id: string;
+	title: string;
+	description: string;
+	defaultOn?: boolean;
+	label: string;
+}
+
+const { id, title, description, defaultOn = false, label } = Astro.props;
+const titleId = `${id}-title`;
+const descriptionId = `${id}-description`;
+---
+
+<figure class="setting-demo" aria-label={label}>
+	<div class="setting-row">
+		<div class="setting-row__text">
+			<span id={titleId} class="setting-row__title">{title}</span>
+			<span id={descriptionId} class="setting-row__description">{description}</span>
+		</div>
+		<StandardSwitch defaultOn={defaultOn} labelledBy={titleId} describedBy={descriptionId} />
+	</div>
+</figure>
+
+<style>
+	.setting-demo {
+		margin: 2rem 0 2.75rem;
+		padding: clamp(1.75rem, 5vw, 3rem) clamp(1rem, 4vw, 2.5rem);
+		border: 1px solid rgb(32 32 29 / 14%);
+		border-radius: 1.5rem;
+		background:
+			linear-gradient(rgb(32 32 29 / 4%) 1px, transparent 1px),
+			linear-gradient(90deg, rgb(32 32 29 / 4%) 1px, transparent 1px),
+			#faf8f2;
+		background-size: 20px 20px;
+		box-shadow: 0 14px 40px rgb(58 52 38 / 7%);
+	}
+
+	.setting-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1.25rem;
+		padding: 1.25rem 1.5rem;
+		border: 2px solid #20201d;
+		border-radius: 1rem;
+		background: #fffef9;
+	}
+
+	.setting-row__text {
+		display: flex;
+		min-width: 0;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	.setting-row__title {
+		font-size: 1rem;
+		font-weight: 800;
+		line-height: 1.5;
+	}
+
+	.setting-row__description {
+		color: #6b675e;
+		font-size: 0.8rem;
+		line-height: 1.6;
+	}
+
+	@media (max-width: 540px) {
+		.setting-row {
+			padding: 1rem;
+		}
+	}
+</style>

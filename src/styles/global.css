@@ -36,3 +36,105 @@
 		background: #20201d;
 	}
 }
+
+/*
+ * 実験ページの本文（<article class="article"> 直下の <section>）に適用する記事スタイル
+ *
+ * NOTE:
+ *   - デモ用コンポーネント内部の要素に効かないよう、子セレクタで対象を section 直下に限定している
+ */
+@layer components {
+	.article {
+		font-size: clamp(0.96rem, 1.8vw, 1.06rem);
+		letter-spacing: 0.015em;
+	}
+
+	.article > section + section {
+		margin-top: 5rem;
+	}
+
+	.article > section > h2 {
+		display: flex;
+		align-items: baseline;
+		gap: 0.75rem;
+		margin: 0 0 2rem;
+		font-size: clamp(1.65rem, 5vw, 2.5rem);
+		font-weight: 800;
+		letter-spacing: -0.055em;
+		line-height: 1.25;
+	}
+
+	.article > section > h2 > span {
+		color: #f85f39;
+		font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+		font-size: 1.2rem;
+		letter-spacing: 0;
+	}
+
+	.article > section > h3 {
+		margin: 4.5rem 0 1.5rem;
+		font-size: clamp(1.25rem, 3vw, 1.55rem);
+		font-weight: 800;
+		letter-spacing: -0.035em;
+		line-height: 1.55;
+	}
+
+	.article > section > p {
+		margin: 0;
+		color: #363530;
+	}
+
+	.article > section > p + p {
+		margin-top: 1.5rem;
+	}
+
+	.article > section > p > strong,
+	.article > section > :is(ul, ol) > li > strong {
+		color: #f85f39;
+		font-weight: 800;
+		text-decoration: underline;
+		text-decoration-color: #f85f39;
+		text-decoration-thickness: 0.18em;
+		text-underline-offset: 0.15em;
+	}
+
+	.article > section > :is(ul, ol) {
+		margin: 1.6rem 0;
+		padding-left: 2.3rem;
+	}
+
+	.article > section > ul {
+		list-style-type: disc;
+	}
+
+	.article > section > ol {
+		list-style-type: decimal;
+	}
+
+	.article > section > :is(ul, ol) > li {
+		padding-left: 0.35rem;
+	}
+
+	.article > section > :is(ul, ol) > li + li {
+		margin-top: 0.3rem;
+	}
+
+	.article > section > :is(ul, ol) > li::marker {
+		color: #f85f39;
+		font-weight: 800;
+	}
+
+	@media (max-width: 540px) {
+		.article > section + section {
+			margin-top: 5.5rem;
+		}
+
+		.article > section > h3 {
+			margin-top: 3.75rem;
+		}
+
+		.article > section > :is(ul, ol) {
+			padding-left: 2.25rem;
+		}
+	}
+}

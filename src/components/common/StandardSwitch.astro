@@ -1,14 +1,27 @@
 ---
+/**
+ * 一般的な（非冪等な）トグルスイッチ
+ *
+ * - defaultOn     : 初期状態を ON にするかどうか
+ * - disabled      : 無効にするかどうか
+ * - label         : アクセシブルな名前（labelledBy 指定時は使われない）
+ * - labelledBy    : 名前として参照する要素の id（画面上の見出しなどを名前にしたい場合）
+ * - describedBy   : 説明として参照する要素の id
+ */
 interface Props {
 	defaultOn?: boolean;
 	disabled?: boolean;
 	label?: string;
+	labelledBy?: string;
+	describedBy?: string;
 }
 
 const {
 	defaultOn = false,
 	disabled = false,
 	label = '機能を切り替える',
+	labelledBy,
+	describedBy,
 } = Astro.props;
 ---
 
@@ -17,7 +30,9 @@ const {
 	class="standard-switch"
 	role="switch"
 	aria-checked={defaultOn ? 'true' : 'false'}
-	aria-label={label}
+	aria-label={labelledBy === undefined ? label : undefined}
+	aria-labelledby={labelledBy}
+	aria-describedby={describedBy}
 	disabled={disabled}
 	data-standard-switch
 >
